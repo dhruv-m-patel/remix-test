@@ -8,7 +8,7 @@ import {
   Outlet,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import { ContactRecord, getContacts } from "~/routes/data";
+import { ContactRecord, createEmptyContact, getContacts } from "~/routes/data";
 
 export { Layout } from './components/Layout';
 
@@ -19,6 +19,11 @@ export const links: LinksFunction = () => [
 export const loader = async () => {
   const contacts = await getContacts();
   return json({ contacts });
+};
+
+export const action = async () => {
+  const contact = await createEmptyContact();
+  return json({ contact });
 };
 
 export default function App() {
