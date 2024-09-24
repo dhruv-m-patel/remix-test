@@ -47,3 +47,11 @@ export function updateContact(contactId: number, data: Partial<ContactRecord>) {
   if (!contact) return;
   Object.assign(contact, data);
 }
+
+export function deleteContact(contactId: number) {
+  const index = contacts.findIndex((c) => c.id === contactId);
+  if (index <= 0) {
+    return;
+  }
+  contacts.splice(index, 1);
+}
