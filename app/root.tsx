@@ -7,9 +7,11 @@ import {
   useLoaderData,
   Outlet,
   useNavigation,
+  useSubmit,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { ContactRecord, createEmptyContact, getContacts } from "~/routes/data";
+import { useEffect } from "react";
 
 export { Layout } from './components/Layout';
 
@@ -23,7 +25,7 @@ export const loader = async ({
   const url = new URL(request.url);
   const q = url.searchParams.get("q") || undefined;
   const contacts = await getContacts(q);
-  return json({ contacts });
+  return json({ contacts, q });
 };
 
 export const action = async () => {
@@ -32,17 +34,28 @@ export const action = async () => {
 };
 
 export default function App() {
-  const { contacts } = useLoaderData<{ contacts: ContactRecord[] }>();
+  const { contacts, q } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
+  const submit = useSubmit();
+  const searching = navigation.location && new URLSearchParams(navigation.location.search).has("q");
+
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || "";
+    }
+  }, [q]);
 
   return (
     <Fragment>
       <div id="sidebar">
         <h1>Remix Contacts</h1>
         <div>
-          <Form id="search-form" role="search">
+          <Form id="search-form" role="search" onChange={(e) => submit(e.currentTarget)}>
             <input
               aria-label="Search contacts"
+              defaultValue={q}
+              className={searching ? "loading" : ""}
               id="q"
               name="q"
               placeholder="Search"
@@ -50,7 +63,7 @@ export default function App() {
             />
             <div
               aria-hidden
-              hidden={true}
+              hidden={!searching}
               id="search-spinner"
             />
           </Form>
@@ -82,7 +95,7 @@ export default function App() {
           )}
         </nav>
       </div>
-      <div id="detail" className={navigation.state === "loading" ? "loading" : ""}>
+      <div id="detail" className={navigation.state === "loading" && !searching ? "loading" : ""}>
         <Outlet />
       </div>
     </Fragment>
