@@ -6,6 +6,7 @@ import {
   NavLink,
   useLoaderData,
   Outlet,
+  useNavigation,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { ContactRecord, createEmptyContact, getContacts } from "~/routes/data";
@@ -28,6 +29,7 @@ export const action = async () => {
 
 export default function App() {
   const { contacts } = useLoaderData<{ contacts: ContactRecord[] }>();
+  const navigation = useNavigation();
 
   return (
     <Fragment>
@@ -76,7 +78,7 @@ export default function App() {
           )}
         </nav>
       </div>
-      <div id="detail">
+      <div id="detail" className={navigation.state === "loading" ? "loading" : ""}>
         <Outlet />
       </div>
     </Fragment>
