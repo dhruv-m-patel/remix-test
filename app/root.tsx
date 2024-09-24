@@ -3,7 +3,7 @@ import appStylesHref from "./styles/app.css?url";
 import { Fragment } from "react/jsx-runtime";
 import {
   Form,
-  Link,
+  NavLink,
   useLoaderData,
   Outlet,
 } from "@remix-run/react";
@@ -57,12 +57,15 @@ export default function App() {
             <ul>
               {contacts.map((c: ContactRecord) => (
                 <li key={c.id}>
-                  <Link to={`/contacts/${c.id}`}>
+                  <NavLink
+                    className={({ isActive, isPending }) => isActive ? "active" : isPending ? "pending" : ""}
+                    to={`/contacts/${c.id}`}
+                  >
                     {c.first || c.last ? `${c.first} ${c.last}` : 'No Name'}
                     {c.favorite && (
                       <span>★</span>
                     )}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>

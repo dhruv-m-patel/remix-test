@@ -87,3 +87,8 @@ button[type="submit"] {
   flex-direction: row;
   align-items: center;
 }
+
+#sidebar > nav a.active {
+  background-color: blueviolet;
+  color: white;
+}
