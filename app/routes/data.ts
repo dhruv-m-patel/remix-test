@@ -51,6 +51,7 @@ export function updateContact(contactId: number, data: Partial<ContactRecord>) {
   const contact = getContact(contactId);
   if (!contact) return;
   Object.assign(contact, data);
+  return data;
 }
 
 export function deleteContact(contactId: number) {
