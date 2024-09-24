@@ -20,8 +20,13 @@ const contacts = [
   },
 ];
 
-export function getContacts() {
-  return contacts;
+export function getContacts(q ?: string) {
+  if (!q?.length) {
+    return contacts;
+  }
+  return contacts.filter((c) => {
+    return [c.first.toLowerCase(), c.last.toLowerCase()].includes(q.toLowerCase());
+  });
 }
 
 export function getContact(contactId: number) {
